@@ -4,10 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
 
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,20 +29,23 @@ public class Controller {
 
 	@Autowired
 	OAuth2AuthorizedClientService clientService;
-
+//	@Autowired
+//	Google google;
 	@GetMapping("/")
 	public String publicAcessMethod() {
 		return "helloWorld";
 	}
 
 	@GetMapping("/restricted")
-	public String restricted(OAuth2AuthenticationToken authenticationToken) {
-		System.out.println();
-		OAuth2AuthorizedClient client = clientService.loadAuthorizedClient(
-				authenticationToken.getAuthorizedClientRegistrationId(), authenticationToken.getName());
-		client.getAccessToken().getTokenValue();
-		client.getRefreshToken().getTokenValue();
-		return "Premitted login";
+	public OAuth2User restricted(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient, @AuthenticationPrincipal OAuth2User principal) {
+//		((OAuth2AuthenticationToken)principal).get;
+//		authorizedClient.getAccessToken();
+//		authorizedClient.getAccessToken().getS
+//		principal.getAttribute("email")
+		
+		System.out.println(authorizedClient.getAccessToken().getTokenValue());
+		
+		return principal;
 	}
 
 	public AuthorizationCodeFlow initializeCodeFlow() throws IOException {
